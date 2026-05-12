@@ -13,7 +13,7 @@ const MainLayout = ({ children }: LayoutProps) => {
             <Header />
             <section className='flex flex-1 overflow-hidden'  >
                 <Sidebar />
-                <main className='flex-1 overflow-y-auto bg-gray-50' >
+                <main className='flex-1 overflow-y-auto bg-gray-50 p-10' >
                     {children}
                 </main>
             </section>
