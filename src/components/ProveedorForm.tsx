@@ -27,7 +27,7 @@ const ProveedorForm = ({ proveedor, onCancel }: ProveedorFormProps) => {
         onCancel?.();
     };
 
-    const { create, isLoading: isCreating } = useCreateProveedor(handleSuccess);
+    const { create, isLoading: isCreating, isError: isCreateError, error: createError } = useCreateProveedor(handleSuccess);
     const { update, isLoading: isUpdating } = useUpdateProveedor(handleSuccess);
 
     const isLoading = isCreating || isUpdating;
@@ -62,6 +62,13 @@ const ProveedorForm = ({ proveedor, onCancel }: ProveedorFormProps) => {
             {showSuccess && (
                 <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm border border-green-100">
                     {isEditMode ? 'Proveedor actualizado exitosamente' : 'Proveedor creado exitosamente'}
+                </div>
+            )}
+
+            {isCreateError && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
+                    <p className="font-medium">{(createError as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Error'}</p>
+                    <p>{(createError as { response?: { data?: { error?: string } } })?.response?.data?.error}</p>
                 </div>
             )}
 

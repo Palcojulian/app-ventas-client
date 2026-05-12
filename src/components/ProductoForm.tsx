@@ -13,7 +13,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
     const isEditMode = !!producto;
     const { data: categorias } = useCategorias();
 
-    const [codigo, setCodigo] = useState(producto?.codigo ?? '');
     const [nombre, setNombre] = useState(producto?.nombre ?? '');
     const [descripcion, setDescripcion] = useState(producto?.descripcion ?? '');
     const [id_categoria, setIdCategoria] = useState(producto?.id_categoria ?? 0);
@@ -26,7 +25,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
     const [showSuccess, setShowSuccess] = useState(false);
 
     const handleSuccess = () => {
-        setCodigo('');
         setNombre('');
         setDescripcion('');
         setIdCategoria(0);
@@ -48,7 +46,19 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const payload = { codigo, nombre, descripcion, id_categoria, precio_venta, costo, stock_actual, stock_minimo, unidad_medida, estado };
+        
+        const payload = { 
+            nombre, 
+            descripcion, 
+            id_categoria, 
+            precio_venta, 
+            costo, 
+            stock_actual, 
+            stock_minimo, 
+            unidad_medida, 
+            estado 
+        };
+
         if (isEditMode && producto) {
             const confirmed = window.confirm('¿Está seguro de editar el producto?');
             if (confirmed) {
@@ -60,7 +70,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
     };
 
     const handleReset = () => {
-        setCodigo('');
         setNombre('');
         setDescripcion('');
         setIdCategoria(0);
@@ -86,35 +95,22 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
 
             {isCreateError && (
                 <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
-                    {(createError as { response?: { data?: { errores?: string } } })?.response?.data?.errores ?? 'Error al crear el producto'}
+                    <p>{(createError as { response?: { data?: { error?: string } } })?.response?.data?.error}</p>
+                    <p className="font-medium">{(createError as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Error'}</p>
                 </div>
             )}
 
-            <div className='grid grid-cols-2 gap-3' >
-                <div className="mb-4">
-                    <label htmlFor="codigo" className="block text-gray-600 text-sm font-medium mb-2">Código</label>
-                    <input
-                        type="text"
-                        id="codigo"
-                        value={codigo}
-                        onChange={(e) => setCodigo(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                        placeholder="Código del producto"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="nombre" className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>
-                    <input
-                        type="text"
-                        id="nombre"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                        placeholder="Nombre del producto"
-                        required
-                    />
-                </div>
+            <div className="mb-4">
+                <label htmlFor="nombre" className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    placeholder="Nombre del producto"
+                    required
+                />
             </div>
 
             <div className="mb-4">

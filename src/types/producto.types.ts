@@ -16,7 +16,7 @@ export interface Producto {
 }
 
 export interface ProductoPayload {
-    codigo: string;
+    codigo?: string;
     nombre: string;
     descripcion: string;
     id_categoria: number;

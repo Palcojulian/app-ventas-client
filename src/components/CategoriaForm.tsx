@@ -25,7 +25,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
         onCancel?.();
     };
 
-    const { create, isLoading: isCreating } = useCreateCategoria(handleSuccess);
+    const { create, isLoading: isCreating, isError: isCreateError, error: createError } = useCreateCategoria(handleSuccess);
     const { update, isLoading: isUpdating } = useUpdateCategoria(handleSuccess);
 
     const isLoading = isCreating || isUpdating;
@@ -62,6 +62,13 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                 </div>
             )}
 
+            {isCreateError && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
+                    <p>{(createError as { response?: { data?: { error?: string } } })?.response?.data?.error}</p>
+                    <p className="font-medium">{(createError as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Error'}</p>
+                </div>
+            )}
+
             <div className="mb-4">
                 <label htmlFor="nombre" className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>
                 <input
@@ -69,9 +76,10 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                     id="nombre"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                     placeholder="Nombre de la categoría"
                     required
+                    disabled={isEditMode ? true : false}
                 />
             </div>
 
@@ -82,10 +90,11 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                     id="prefijo"
                     value={prefijo}
                     onChange={(e) => setPrefijo(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                     placeholder="Prefijo (máx. 10 caracteres)"
                     maxLength={10}
                     required
+                    disabled={isEditMode ? true : false}
                 />
             </div>
 
