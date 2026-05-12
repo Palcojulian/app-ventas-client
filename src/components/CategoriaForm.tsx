@@ -106,7 +106,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="flex-1 bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                    className="flex-1 bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                 >
                     {isLoading ? 'Guardando...' : isEditMode ? 'Actualizar' : 'Guardar'}
                 </button>
@@ -114,7 +114,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
                     >
                         Cancelar
                     </button>
@@ -123,7 +123,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                     <button
                         type="button"
                         onClick={handleReset}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
                     >
                         Limpiar
                     </button>

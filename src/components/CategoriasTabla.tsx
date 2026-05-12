@@ -44,7 +44,7 @@ const CategoriasTabla = ({ onEdit }: CategoriasTablaProps) => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button
                                         onClick={() => onEdit(categoria)}
-                                        className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                        className="p-2 text-indigo-600 hover:bg-indigo-50 hover:cursor-pointer rounded-lg transition-colors"
                                         title="Editar"
                                     >
                                         <Pencil width={18} height={18} />

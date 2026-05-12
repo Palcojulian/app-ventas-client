@@ -25,7 +25,7 @@ const Header = () => {
                 <button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="p-2 text-gray-600 hover:text-red-600 disabled:opacity-50"
+                    className="p-2 text-gray-600 hover:text-red-600 hover:cursor-pointer disabled:opacity-50"
                     title="Cerrar sesión"
                 >
                     <LogOut width={40} height={40} />
