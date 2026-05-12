@@ -1,5 +1,29 @@
+import { useState } from 'react';
+import CategoriaForm from '../components/CategoriaForm';
+import CategoriasTabla from '../components/CategoriasTabla';
+import type { Categoria } from '../types/categoria.types';
+
 const Categorias = () => {
-    return <h1>Categorías</h1>;
+    const [editingCategoria, setEditingCategoria] = useState<Categoria | undefined>(undefined);
+
+    const handleEdit = (categoria: Categoria) => {
+        setEditingCategoria(categoria);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingCategoria(undefined);
+    };
+
+    return (
+        <div className="flex gap-5">
+            <CategoriaForm
+                key={editingCategoria?.id ?? 'create'}
+                categoria={editingCategoria}
+                onCancel={handleCancelEdit}
+            />
+            <CategoriasTabla onEdit={handleEdit} />
+        </div>
+    );
 };
 
 export default Categorias;
