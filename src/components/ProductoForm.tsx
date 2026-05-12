@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useCreateProducto, useUpdateProducto } from '../hooks/useProducto';
 import { useCategorias } from '../hooks/useCategoria';
 import type { Producto } from '../types/producto.types';
-import { UNIDADES_MEDIDA } from '../types/producto.types';
-
 interface ProductoFormProps {
     producto?: Producto;
     onCancel?: () => void;
@@ -20,7 +18,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
     const [costo, setCosto] = useState(producto?.costo ?? 0);
     const [stock_actual, setStockActual] = useState(producto?.stock_actual ?? 0);
     const [stock_minimo, setStockMinimo] = useState(producto?.stock_minimo ?? 0);
-    const [unidad_medida, setUnidadMedida] = useState(producto?.unidad_medida ?? 'u');
     const [estado, setEstado] = useState(producto?.estado ?? 'activo');
     const [showSuccess, setShowSuccess] = useState(false);
 
@@ -32,7 +29,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
         setCosto(0);
         setStockActual(0);
         setStockMinimo(0);
-        setUnidadMedida('u');
         setEstado('activo');
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
@@ -55,7 +51,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
             costo, 
             stock_actual, 
             stock_minimo, 
-            unidad_medida, 
             estado 
         };
 
@@ -77,7 +72,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
         setCosto(0);
         setStockActual(0);
         setStockMinimo(0);
-        setUnidadMedida('u');
         setEstado('activo');
     };
 
@@ -132,8 +126,9 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
                     id="id_categoria"
                     value={id_categoria}
                     onChange={(e) => setIdCategoria(Number(e.target.value))}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                     required
+                    disabled={isEditMode ? true : false}
                 >
                     <option value={0}>Seleccione una categoría</option>
                     {categorias?.map((cat) => (
@@ -196,21 +191,6 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
                         required
                     />
                 </div>
-            </div>
-
-            <div className="mb-4">
-                <label htmlFor="unidad_medida" className="block text-gray-600 text-sm font-medium mb-2">Unidad de Medida</label>
-                <select
-                    id="unidad_medida"
-                    value={unidad_medida}
-                    onChange={(e) => setUnidadMedida(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
-                    required
-                >
-                    {UNIDADES_MEDIDA.map((u) => (
-                        <option key={u.value} value={u.value}>{u.label}</option>
-                    ))}
-                </select>
             </div>
 
             {

@@ -21,7 +21,6 @@ const ProductosTabla = ({ onEdit }: ProductosTablaProps) => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio Venta</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Und.</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
@@ -41,7 +40,6 @@ const ProductosTabla = ({ onEdit }: ProductosTablaProps) => {
                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">${producto.precio_venta.toFixed(2)}</td>
                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">${producto.costo.toFixed(2)}</td>
                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{producto.stock_actual}</td>
-                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{producto.unidad_medida}</td>
                                 <td className="px-4 py-4 whitespace-nowrap">
                                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${producto.estado === 'activo' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                         {producto.estado}

@@ -24,7 +24,7 @@ export interface ProductoPayload {
     costo: number;
     stock_actual: number;
     stock_minimo: number;
-    unidad_medida: string;
+    unidad_medida?: string;
     estado: string;
 }
 
