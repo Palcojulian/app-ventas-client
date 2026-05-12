@@ -6,6 +6,7 @@ export const useProveedores = () => {
     return useQuery({
         queryKey: ['proveedores'],
         queryFn: () => proveedorService.getAll(),
+        staleTime: 60 * 1000 * 60
     });
 };
 

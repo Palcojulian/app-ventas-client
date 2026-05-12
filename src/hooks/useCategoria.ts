@@ -6,6 +6,7 @@ export const useCategorias = () => {
     return useQuery({
         queryKey: ['categorias'],
         queryFn: () => categoriaService.getAll(),
+        staleTime: 60 * 1000 * 60
     });
 };
 

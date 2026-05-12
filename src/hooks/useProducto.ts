@@ -6,6 +6,7 @@ export const useProductos = () => {
     return useQuery({
         queryKey: ['productos'],
         queryFn: () => productoService.getAll(),
+        staleTime: 60 * 1000 * 60
     });
 };
 
