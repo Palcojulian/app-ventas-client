@@ -10,12 +10,14 @@ interface CategoriaFormProps {
 const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
     const isEditMode = !!categoria;
     const [nombre, setNombre] = useState(categoria?.nombre ?? '');
+    const [prefijo, setPrefijo] = useState(categoria?.prefijo ?? '');
     const [descripcion, setDescripcion] = useState(categoria?.descripcion ?? '');
     const [estado, setEstado] = useState(categoria?.estado ?? 'activo');
     const [showSuccess, setShowSuccess] = useState(false);
 
     const handleSuccess = () => {
         setNombre('');
+        setPrefijo('');
         setDescripcion('');
         setEstado('activo');
         setShowSuccess(true);
@@ -30,7 +32,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const payload = { nombre, descripcion, estado };
+        const payload = { nombre, prefijo, descripcion, estado };
         if (isEditMode && categoria) {
             const confirmed = window.confirm('¿Está seguro de editar la categoría?');
             if (confirmed) {
@@ -43,6 +45,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
 
     const handleReset = () => {
         setNombre('');
+        setPrefijo('');
         setDescripcion('');
         setEstado('activo');
     };
@@ -68,6 +71,20 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
                     onChange={(e) => setNombre(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     placeholder="Nombre de la categoría"
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label htmlFor="prefijo" className="block text-gray-600 text-sm font-medium mb-2">Prefijo</label>
+                <input
+                    type="text"
+                    id="prefijo"
+                    value={prefijo}
+                    onChange={(e) => setPrefijo(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    placeholder="Prefijo (máx. 10 caracteres)"
+                    maxLength={10}
                     required
                 />
             </div>

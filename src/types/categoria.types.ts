@@ -1,6 +1,7 @@
 export interface Categoria {
     id: number;
     nombre: string;
+    prefijo: string;
     descripcion: string;
     estado: string;
     created_at: string;
@@ -9,15 +10,17 @@ export interface Categoria {
 
 export interface CategoriaPayload {
     nombre: string;
+    prefijo: string;
     descripcion: string;
     estado: string;
 }
 
 export interface CategoriaResponse {
+    id: number;
     nombre: string;
+    prefijo: string;
     descripcion: string;
     estado: string;
-    updated_at: string;
     created_at: string;
-    id: number;
+    updated_at: string;
 }

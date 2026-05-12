@@ -16,6 +16,7 @@ const CategoriasTabla = ({ onEdit }: CategoriasTablaProps) => {
                     <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prefijo</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Creación</th>
@@ -25,13 +26,14 @@ const CategoriasTabla = ({ onEdit }: CategoriasTablaProps) => {
                 <tbody className="divide-y divide-gray-100">
                     {isLoading ? (
                         <tr>
-                            <td colSpan={6} className="px-6 py-4 text-center text-gray-500">Cargando...</td>
+                            <td colSpan={7} className="px-6 py-4 text-center text-gray-500">Cargando...</td>
                         </tr>
                     ) : categorias && categorias.length > 0 ? (
                         categorias.map((categoria) => (
                             <tr key={categoria.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{categoria.id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{categoria.nombre}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{categoria.prefijo ?? '-'}</td>
                                 <td className="px-6 py-4 text-sm text-gray-600">{categoria.descripcion}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${categoria.estado === 'activo' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -54,7 +56,7 @@ const CategoriasTabla = ({ onEdit }: CategoriasTablaProps) => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6} className="px-6 py-4 text-center text-gray-500">No hay categorías registradas</td>
+                            <td colSpan={7} className="px-6 py-4 text-center text-gray-500">No hay categorías registradas</td>
                         </tr>
                     )}
                 </tbody>
