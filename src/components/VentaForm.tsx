@@ -94,7 +94,7 @@ const VentaForm = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-4xl min-w-md h-full"
+            className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 w-full max-w-4xl h-full"
         >
             <h3 className="text-lg font-semibold text-gray-700 mb-4">Registrar Venta</h3>
 
@@ -127,7 +127,7 @@ const VentaForm = () => {
                 </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label
                         htmlFor="metodo_pago"
@@ -185,24 +185,25 @@ const VentaForm = () => {
                 </div>
 
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <table className="w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                                    Producto
-                                </th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
-                                    Cantidad
-                                </th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
-                                    Precio Unit.
-                                </th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
-                                    Subtotal
-                                </th>
-                                <th className="px-4 py-2 w-12"></th>
-                            </tr>
-                        </thead>
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[520px]">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Producto
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
+                                        Cantidad
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
+                                        Precio Unit.
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">
+                                        Subtotal
+                                    </th>
+                                    <th className="px-4 py-2 w-12"></th>
+                                </tr>
+                            </thead>
                         <tbody className="divide-y divide-gray-100">
                             {detalles.map((detalle, index) => (
                                 <tr key={index}>
@@ -260,6 +261,7 @@ const VentaForm = () => {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
 

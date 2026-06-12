@@ -13,9 +13,9 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-96 border border-gray-100">
-                <div className="flex flex-col items-center mb-8">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+            <form onSubmit={handleSubmit} className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-sm sm:max-w-md border border-gray-100">
+                <div className="flex flex-col items-center mb-6 sm:mb-8">
                     <div className="w-16 h-16 bg-indigo-500 rounded-full flex items-center justify-center mb-4">
                         <CircleUser className="text-white" width={32} height={32} />
                     </div>

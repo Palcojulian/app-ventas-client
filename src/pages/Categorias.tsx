@@ -15,7 +15,7 @@ const Categorias = () => {
     };
 
     return (
-        <div className="flex gap-5">
+        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5">
             <CategoriaForm
                 key={editingCategoria?.id ?? 'create'}
                 categoria={editingCategoria}

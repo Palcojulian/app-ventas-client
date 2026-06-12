@@ -51,7 +51,7 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-lg min-w-md h-full">
+        <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 w-full lg:max-w-lg lg:min-w-md lg:h-full">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
                 {isEditMode ? 'Editar Categoría' : 'Crear Categoría'}
             </h3>

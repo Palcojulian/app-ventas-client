@@ -15,7 +15,7 @@ const Productos = () => {
     };
 
     return (
-        <div className="flex gap-5">
+        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5">
             <ProductoForm
                 key={editingProducto?.id ?? 'create'}
                 producto={editingProducto}

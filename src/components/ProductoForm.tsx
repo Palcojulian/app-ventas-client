@@ -76,7 +76,7 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-lg min-w-md h-full">
+        <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 w-full lg:max-w-lg lg:min-w-md lg:h-full">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
                 {isEditMode ? 'Editar Producto' : 'Crear Producto'}
             </h3>
@@ -137,7 +137,7 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
                 </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label htmlFor="precio_venta" className="block text-gray-600 text-sm font-medium mb-2">Precio Venta</label>
                     <input
@@ -166,7 +166,7 @@ const ProductoForm = ({ producto, onCancel }: ProductoFormProps) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label htmlFor="stock_actual" className="block text-gray-600 text-sm font-medium mb-2">Stock Actual</label>
                     <input
