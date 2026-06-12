@@ -6,6 +6,7 @@ import { getData } from '../utils/storage';
 import type { User } from '../types/auth.types';
 import type { DetalleVentaPayload, Producto } from '../types/venta.types';
 import { METODOS_PAGO, ESTADOS_VENTA } from '../types/venta.types';
+import { SearchableSelect } from './SearchableSelect';
 
 interface DetalleUI extends DetalleVentaPayload {
     precio_unitario: number;
@@ -206,21 +207,19 @@ const VentaForm = () => {
                             {detalles.map((detalle, index) => (
                                 <tr key={index}>
                                     <td className="px-4 py-2">
-                                        <select
+                                        <SearchableSelect
                                             value={detalle.id_producto}
-                                            onChange={(e) =>
-                                                handleProductoChange(index, Number(e.target.value))
-                                            }
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white text-sm"
+                                            onChange={(val) => handleProductoChange(index, val)}
+                                            clearValue={0}
+                                            placeholder="Buscar producto..."
+                                            searchPlaceholder="Buscar por nombre o código..."
                                             required
-                                        >
-                                            <option value={0}>Seleccione</option>
-                                            {getAvailableProducts(index).map((prod) => (
-                                                <option key={prod.id} value={prod.id}>
-                                                    {prod.nombre} ({prod.codigo}) — stock: {prod.stock_actual}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            options={getAvailableProducts(index).map((prod) => ({
+                                                value: prod.id,
+                                                label: `${prod.nombre} (${prod.codigo})`,
+                                                subLabel: `Stock: ${prod.stock_actual}`,
+                                            }))}
+                                        />
                                     </td>
                                     <td className="px-4 py-2">
                                         <input
