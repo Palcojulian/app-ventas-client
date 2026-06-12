@@ -212,7 +212,8 @@ const VentaForm = () => {
                                             value={detalle.id_producto}
                                             onChange={(val) => handleProductoChange(index, val)}
                                             clearValue={0}
-                                            placeholder="Buscar producto..."
+                                            placeholder="Seleccionar producto..."
+                                            title="Seleccionar producto"
                                             searchPlaceholder="Buscar por nombre o código..."
                                             required
                                             options={getAvailableProducts(index).map((prod) => ({
