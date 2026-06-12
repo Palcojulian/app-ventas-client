@@ -218,7 +218,7 @@ const VentaForm = () => {
                                             required
                                             options={getAvailableProducts(index).map((prod) => ({
                                                 value: prod.id,
-                                                label: `${prod.nombre} (${prod.codigo})`,
+                                                label: `${prod.codigo} - ${prod.nombre}`,
                                                 subLabel: `Stock: ${prod.stock_actual}`,
                                             }))}
                                         />
