@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# Ejecución del proyecto
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Requisitos
 
-Currently, two official plugins are available:
+Para ejecutar el proyecto necesitas tener instalado:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Docker
+* Docker Compose
 
-## React Compiler
+Verifica las instalaciones:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+docker --version
+docker compose version
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Entornos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+El proyecto cuenta con dos configuraciones de Docker:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Archivo          | Entorno              | Uso                                     |
+| ---------------- | -------------------- | --------------------------------------- |
+| `Dockerfile.dev` | Pruebas / Desarrollo | Ejecutar y probar cambios localmente    |
+| `Dockerfile`     | Producción           | Construir la aplicación para producción |
+
+---
+
+# 🧪 Entorno de pruebas / desarrollo
+
+Para ejecutar el proyecto utilizando `Dockerfile.dev`:
+
+```bash
+docker build -f Dockerfile.dev -t proyecto-dev .
 ```
+
+Luego inicia el contenedor:
+
+```bash
+docker run --name proyecto-dev -p 5173:5173 proyecto-dev
+```
+
+La aplicación estará disponible en:
+
+```text
+http://localhost:5173
+```
+
+### Ejecutar en segundo plano
+
+También puedes iniciar el contenedor en segundo plano:
+
+```bash
+docker run -d --name proyecto-dev -p 5173:5173 proyecto-dev
+```
+
+### Ver los logs
+
+```bash
+docker logs -f proyecto-dev
+```
+
+### Detener el contenedor
+
+```bash
+docker stop proyecto-dev
+```
+
+### Eliminar el contenedor
+
+```bash
+docker rm proyecto-dev
+```
+
+---
+
+# 🚀 Entorno de producción
+
+Pendiente configuracion:
+
+---
