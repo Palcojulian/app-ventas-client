@@ -30,13 +30,13 @@ El proyecto cuenta con dos configuraciones de Docker:
 Para ejecutar el proyecto utilizando `Dockerfile.dev`:
 
 ```bash
-docker build -f Dockerfile.dev -t proyecto-dev .
+docker build -f Dockerfile.dev -t app-ventas-client .
 ```
 
 Luego inicia el contenedor:
 
 ```bash
-docker run --name proyecto-dev -p 5173:5173 proyecto-dev
+docker run --name app-ventas-client -p 5173:5173 app-ventas-client
 ```
 
 La aplicación estará disponible en:
@@ -50,25 +50,25 @@ http://localhost:5173
 También puedes iniciar el contenedor en segundo plano:
 
 ```bash
-docker run -d --name proyecto-dev -p 5173:5173 proyecto-dev
+docker run -d --name app-ventas-client -p 5173:5173 app-ventas-client
 ```
 
 ### Ver los logs
 
 ```bash
-docker logs -f proyecto-dev
+docker logs -f app-ventas-client
 ```
 
 ### Detener el contenedor
 
 ```bash
-docker stop proyecto-dev
+docker stop app-ventas-client
 ```
 
 ### Eliminar el contenedor
 
 ```bash
-docker rm proyecto-dev
+docker rm app-ventas-client
 ```
 
 ---
