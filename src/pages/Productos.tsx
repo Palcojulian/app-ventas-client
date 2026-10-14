@@ -8,6 +8,7 @@ const Productos = () => {
 
     const handleEdit = (producto: Producto) => {
         setEditingProducto(producto);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleCancelEdit = () => {
@@ -15,13 +16,17 @@ const Productos = () => {
     };
 
     return (
-        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5">
-            <ProductoForm
-                key={editingProducto?.id ?? 'create'}
-                producto={editingProducto}
-                onCancel={handleCancelEdit}
-            />
-            <ProductosTabla onEdit={handleEdit} />
+        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5 items-start">
+            <div className="w-full xl:w-[400px] xl:flex-shrink-0">
+                <ProductoForm
+                    key={editingProducto?.id ?? 'create'}
+                    producto={editingProducto}
+                    onCancel={handleCancelEdit}
+                />
+            </div>
+            <div className="w-full flex-1 min-w-0">
+                <ProductosTabla onEdit={handleEdit} />
+            </div>
         </div>
     );
 };

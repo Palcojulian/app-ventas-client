@@ -8,6 +8,7 @@ const Categorias = () => {
 
     const handleEdit = (categoria: Categoria) => {
         setEditingCategoria(categoria);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleCancelEdit = () => {
@@ -15,13 +16,17 @@ const Categorias = () => {
     };
 
     return (
-        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5">
-            <CategoriaForm
-                key={editingCategoria?.id ?? 'create'}
-                categoria={editingCategoria}
-                onCancel={handleCancelEdit}
-            />
-            <CategoriasTabla onEdit={handleEdit} />
+        <div className="flex flex-col xl:flex-row gap-4 xl:gap-5 items-start">
+            <div className="w-full xl:w-[360px] xl:flex-shrink-0">
+                <CategoriaForm
+                    key={editingCategoria?.id ?? 'create'}
+                    categoria={editingCategoria}
+                    onCancel={handleCancelEdit}
+                />
+            </div>
+            <div className="w-full flex-1 min-w-0">
+                <CategoriasTabla onEdit={handleEdit} />
+            </div>
         </div>
     );
 };
