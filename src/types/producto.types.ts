@@ -44,6 +44,10 @@ export interface ProductoResponse {
     updated_at: string;
 }
 
+export interface ImportarProductosResult {
+    message: string;
+}
+
 export const UNIDADES_MEDIDA = [
     { value: 'ml', label: 'Mililitros (ml)' },
     { value: 'l', label: 'Litros (L)' },
