@@ -10,10 +10,8 @@ export interface User {
 export interface LoginResponse {
     success: boolean;
     message: string;
-    data: {
-        user: User;
-        token: string;
-    };
+    user: User;
+    token: string;
 }
 
 export interface LoginPayload {

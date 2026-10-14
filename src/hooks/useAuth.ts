@@ -13,8 +13,8 @@ export const useAuth = () => {
     const loginMutation = useMutation({
         mutationFn: (payload: LoginPayload) => authService.login(payload),
         onSuccess: (response) => {
-            saveData(AUTH_KEY, response.data.user);
-            saveData(TOKEN_KEY, response.data.token);
+            saveData(AUTH_KEY, response.user);
+            saveData(TOKEN_KEY, response.token);
             navigate('/inicio', { replace: true });
         },
     });
