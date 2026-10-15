@@ -50,3 +50,25 @@ export const useUpdateProducto = (onSuccess?: () => void) => {
         error: updateMutation.error,
     };
 };
+
+export const useImportarProductos = (onSuccess?: () => void) => {
+    const queryClient = useQueryClient();
+
+    const importarMutation = useMutation({
+        mutationFn: (file: File) => productoService.importar(file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['productos'] });
+            onSuccess?.();
+        },
+    });
+
+    return {
+        importar: importarMutation.mutate,
+        importarAsync: importarMutation.mutateAsync,
+        isLoading: importarMutation.isPending,
+        isError: importarMutation.isError,
+        isSuccess: importarMutation.isSuccess,
+        error: importarMutation.error,
+        reset: importarMutation.reset,
+    };
+};

@@ -1,5 +1,15 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { Hash, RefreshCw, Save, Edit3, Tag, FileText, Loader2 } from 'lucide-react';
 import { useCreateCategoria, useUpdateCategoria } from '../hooks/useCategoria';
+import { useToast } from './ui/useToast';
+import { ConfirmModal } from './ui/Modal';
+import Card from './ui/Card';
+import Input from './ui/Input';
+import Textarea from './ui/Textarea';
+import Select from './ui/Select';
+import Button from './ui/Button';
+import Badge from './ui/Badge';
 import type { Categoria } from '../types/categoria.types';
 
 interface CategoriaFormProps {
@@ -9,38 +19,45 @@ interface CategoriaFormProps {
 
 const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
     const isEditMode = !!categoria;
+    const toast = useToast();
+
     const [nombre, setNombre] = useState(categoria?.nombre ?? '');
     const [prefijo, setPrefijo] = useState(categoria?.prefijo ?? '');
     const [descripcion, setDescripcion] = useState(categoria?.descripcion ?? '');
     const [estado, setEstado] = useState(categoria?.estado ?? 'activo');
-    const [showSuccess, setShowSuccess] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleSuccess = () => {
+    const handleSuccess = (msg: string) => {
         setNombre('');
         setPrefijo('');
         setDescripcion('');
         setEstado('activo');
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+        toast.success(msg);
         onCancel?.();
     };
 
-    const { create, isLoading: isCreating, isError: isCreateError, error: createError } = useCreateCategoria(handleSuccess);
-    const { update, isLoading: isUpdating } = useUpdateCategoria(handleSuccess);
-
+    const { create, isLoading: isCreating, error: createError } = useCreateCategoria(() =>
+        handleSuccess('Categoría creada exitosamente'),
+    );
+    const { update, isLoading: isUpdating } = useUpdateCategoria(() =>
+        handleSuccess('Categoría actualizada exitosamente'),
+    );
     const isLoading = isCreating || isUpdating;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         const payload = { nombre, prefijo, descripcion, estado };
         if (isEditMode && categoria) {
-            const confirmed = window.confirm('¿Está seguro de editar la categoría?');
-            if (confirmed) {
-                update({ id: categoria.id, payload });
-            }
+            setConfirmOpen(true);
         } else {
             create(payload);
         }
+    };
+
+    const handleConfirmUpdate = () => {
+        if (!categoria) return;
+        setConfirmOpen(false);
+        update({ id: categoria.id, payload: { nombre, prefijo, descripcion, estado } });
     };
 
     const handleReset = () => {
@@ -50,112 +67,130 @@ const CategoriaForm = ({ categoria, onCancel }: CategoriaFormProps) => {
         setEstado('activo');
     };
 
+    const serverError = (createError as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message;
+
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 w-full lg:max-w-lg lg:min-w-md lg:h-full">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                {isEditMode ? 'Editar Categoría' : 'Crear Categoría'}
-            </h3>
-
-            {showSuccess && (
-                <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm border border-green-100">
-                    {isEditMode ? 'Categoría actualizada exitosamente' : 'Categoría creada exitosamente'}
+        <>
+            <Card>
+                <div className="flex items-start justify-between gap-3 mb-5">
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            {isEditMode ? <Edit3 size={18} /> : <Tag size={18} />}
+                            {isEditMode ? 'Editar categoría' : 'Nueva categoría'}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                            {isEditMode
+                                ? 'Modifica los datos de la categoría seleccionada.'
+                                : 'Crea una categoría para organizar tus productos.'}
+                        </p>
+                    </div>
+                    {isEditMode && <Badge variant="warning">Editando</Badge>}
                 </div>
-            )}
 
-            {isCreateError && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
-                    <p>{(createError as { response?: { data?: { error?: string } } })?.response?.data?.error}</p>
-                    <p className="font-medium">{(createError as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Error'}</p>
-                </div>
-            )}
+                {serverError && (
+                    <div
+                        role="alert"
+                        className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm"
+                    >
+                        {serverError}
+                    </div>
+                )}
 
-            <div className="mb-4">
-                <label htmlFor="nombre" className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>
-                <input
-                    type="text"
-                    id="nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    placeholder="Nombre de la categoría"
-                    required
-                    disabled={isEditMode ? true : false}
-                />
-            </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                        label="Nombre"
+                        id="nombre"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Ej. Bebidas, Limpieza, etc."
+                        required
+                        disabled={isEditMode}
+                        leftIcon={<Tag size={16} />}
+                    />
 
-            <div className="mb-4">
-                <label htmlFor="prefijo" className="block text-gray-600 text-sm font-medium mb-2">Prefijo</label>
-                <input
-                    type="text"
-                    id="prefijo"
-                    value={prefijo}
-                    onChange={(e) => setPrefijo(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    placeholder="Prefijo (máx. 10 caracteres)"
-                    maxLength={10}
-                    required
-                    disabled={isEditMode ? true : false}
-                />
-            </div>
+                    <Input
+                        label="Prefijo"
+                        id="prefijo"
+                        value={prefijo}
+                        onChange={(e) => setPrefijo(e.target.value.toUpperCase())}
+                        placeholder="Ej. BEB"
+                        maxLength={10}
+                        helper="Máx. 10 caracteres. Se usa para generar códigos."
+                        required
+                        disabled={isEditMode}
+                        leftIcon={<Hash size={16} />}
+                    />
 
-            <div className="mb-4">
-                <label htmlFor="descripcion" className="block text-gray-600 text-sm font-medium mb-2">Descripción</label>
-                <textarea
-                    id="descripcion"
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
-                    placeholder="Descripción de la categoría"
-                    rows={3}
-                    required
-                />
-            </div>
-            {
-                isEditMode && (
-                    <div className="mb-6">
-                        <label htmlFor="estado" className="block text-gray-600 text-sm font-medium mb-2">Estado</label>
-                        <select
+                    <Textarea
+                        label="Descripción"
+                        id="descripcion"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        placeholder="Describe brevemente la categoría"
+                        required
+                    />
+
+                    {isEditMode && (
+                        <Select
+                            label="Estado"
                             id="estado"
                             value={estado}
                             onChange={(e) => setEstado(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                            options={[
+                                { value: 'activo', label: 'Activo' },
+                                { value: 'inactivo', label: 'Inactivo' },
+                            ]}
                             required
-                        >
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                )
-            }
+                        />
+                    )}
 
-            <div className="flex gap-3">
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex-1 bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                >
-                    {isLoading ? 'Guardando...' : isEditMode ? 'Actualizar' : 'Guardar'}
-                </button>
-                {isEditMode && (
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
-                    >
-                        Cancelar
-                    </button>
-                )}
-                {!isEditMode && (
-                    <button
-                        type="button"
-                        onClick={handleReset}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
-                    >
-                        Limpiar
-                    </button>
-                )}
-            </div>
-        </form>
+                    <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={isEditMode ? onCancel : handleReset}
+                            fullWidth
+                            leftIcon={<RefreshCw size={16} />}
+                        >
+                            {isEditMode ? 'Cancelar' : 'Limpiar'}
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={isLoading}
+                            fullWidth
+                            leftIcon={
+                                isLoading ? (
+                                    <Loader2 size={16} className="animate-spin" />
+                                ) : isEditMode ? (
+                                    <Save size={16} />
+                                ) : (
+                                    <FileText size={16} />
+                                )
+                            }
+                        >
+                            {isLoading
+                                ? 'Guardando...'
+                                : isEditMode
+                                  ? 'Actualizar'
+                                  : 'Guardar categoría'}
+                        </Button>
+                    </div>
+                </form>
+            </Card>
+
+            <ConfirmModal
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleConfirmUpdate}
+                title="¿Editar categoría?"
+                description="Vas a modificar los datos de esta categoría. El cambio se registrará inmediatamente."
+                confirmText="Sí, editar"
+                cancelText="Cancelar"
+                loading={isUpdating}
+            />
+        </>
     );
 };
 

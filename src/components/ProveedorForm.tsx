@@ -1,5 +1,14 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { Building2, Mail, Phone, RefreshCw, Save, Loader2, Edit3, User } from 'lucide-react';
 import { useCreateProveedor, useUpdateProveedor } from '../hooks/useProveedor';
+import { useToast } from './ui/useToast';
+import { ConfirmModal } from './ui/Modal';
+import Card from './ui/Card';
+import Input from './ui/Input';
+import Select from './ui/Select';
+import Button from './ui/Button';
+import Badge from './ui/Badge';
 import type { Proveedor } from '../types/proveedor.types';
 
 interface ProveedorFormProps {
@@ -9,40 +18,50 @@ interface ProveedorFormProps {
 
 const ProveedorForm = ({ proveedor, onCancel }: ProveedorFormProps) => {
     const isEditMode = !!proveedor;
+    const toast = useToast();
+
     const [nombre, setNombre] = useState(proveedor?.nombre ?? '');
     const [contacto, setContacto] = useState(proveedor?.contacto ?? '');
     const [telefono, setTelefono] = useState(proveedor?.telefono ?? '');
     const [email, setEmail] = useState(proveedor?.email ?? '');
     const [estado, setEstado] = useState(proveedor?.estado ?? 'activo');
-    const [showSuccess, setShowSuccess] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleSuccess = () => {
+    const handleSuccess = (msg: string) => {
         setNombre('');
         setContacto('');
         setTelefono('');
         setEmail('');
         setEstado('activo');
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+        toast.success(msg);
         onCancel?.();
     };
 
-    const { create, isLoading: isCreating, isError: isCreateError, error: createError } = useCreateProveedor(handleSuccess);
-    const { update, isLoading: isUpdating } = useUpdateProveedor(handleSuccess);
-
+    const { create, isLoading: isCreating, error: createError } = useCreateProveedor(() =>
+        handleSuccess('Proveedor creado exitosamente'),
+    );
+    const { update, isLoading: isUpdating } = useUpdateProveedor(() =>
+        handleSuccess('Proveedor actualizado exitosamente'),
+    );
     const isLoading = isCreating || isUpdating;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         const payload = { nombre, contacto, telefono, email, estado };
         if (isEditMode && proveedor) {
-            const confirmed = window.confirm('¿Está seguro de editar el proveedor?');
-            if (confirmed) {
-                update({ id: proveedor.id, payload });
-            }
+            setConfirmOpen(true);
         } else {
             create(payload);
         }
+    };
+
+    const handleConfirmUpdate = () => {
+        if (!proveedor) return;
+        setConfirmOpen(false);
+        update({
+            id: proveedor.id,
+            payload: { nombre, contacto, telefono, email, estado },
+        });
     };
 
     const handleReset = () => {
@@ -53,123 +72,139 @@ const ProveedorForm = ({ proveedor, onCancel }: ProveedorFormProps) => {
         setEstado('activo');
     };
 
+    const serverError = (createError as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message;
+
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 w-full lg:max-w-lg lg:min-w-md lg:h-full">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                {isEditMode ? 'Editar Proveedor' : 'Crear Proveedor'}
-            </h3>
-
-            {showSuccess && (
-                <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm border border-green-100">
-                    {isEditMode ? 'Proveedor actualizado exitosamente' : 'Proveedor creado exitosamente'}
+        <>
+            <Card>
+                <div className="flex items-start justify-between gap-3 mb-5">
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            {isEditMode ? <Edit3 size={18} /> : <Building2 size={18} />}
+                            {isEditMode ? 'Editar proveedor' : 'Nuevo proveedor'}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                            {isEditMode
+                                ? 'Modifica los datos del proveedor seleccionado.'
+                                : 'Registra un nuevo proveedor en el sistema.'}
+                        </p>
+                    </div>
+                    {isEditMode && <Badge variant="warning">Editando</Badge>}
                 </div>
-            )}
 
-            {isCreateError && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
-                    <p className="font-medium">{(createError as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Error'}</p>
-                    <p>{(createError as { response?: { data?: { error?: string } } })?.response?.data?.error}</p>
-                </div>
-            )}
+                {serverError && (
+                    <div
+                        role="alert"
+                        className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm"
+                    >
+                        {serverError}
+                    </div>
+                )}
 
-            <div className="mb-4">
-                <label htmlFor="nombre" className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>
-                <input
-                    type="text"
-                    id="nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="Nombre del proveedor"
-                    required
-                />
-            </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                        label="Nombre"
+                        id="nombre"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Razón social del proveedor"
+                        required
+                        leftIcon={<Building2 size={16} />}
+                    />
 
-            <div className="mb-4">
-                <label htmlFor="contacto" className="block text-gray-600 text-sm font-medium mb-2">Contacto</label>
-                <input
-                    type="text"
-                    id="contacto"
-                    value={contacto}
-                    onChange={(e) => setContacto(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="Nombre del contacto"
-                    required
-                />
-            </div>
+                    <Input
+                        label="Persona de contacto"
+                        id="contacto"
+                        value={contacto}
+                        onChange={(e) => setContacto(e.target.value)}
+                        placeholder="Nombre del responsable"
+                        required
+                        leftIcon={<User size={16} />}
+                    />
 
-            <div className="mb-4">
-                <label htmlFor="telefono" className="block text-gray-600 text-sm font-medium mb-2">Teléfono</label>
-                <input
-                    type="text"
-                    id="telefono"
-                    value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="Teléfono del proveedor"
-                    required
-                />
-            </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Input
+                            label="Teléfono"
+                            id="telefono"
+                            type="tel"
+                            value={telefono}
+                            onChange={(e) => setTelefono(e.target.value)}
+                            placeholder="+52 555 000 0000"
+                            required
+                            leftIcon={<Phone size={16} />}
+                        />
 
-            <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-600 text-sm font-medium mb-2">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="email@ejemplo.com"
-                    required
-                />
-            </div>
+                        <Input
+                            label="Email"
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="contacto@proveedor.com"
+                            required
+                            leftIcon={<Mail size={16} />}
+                        />
+                    </div>
 
-            {
-                isEditMode && (
-                    <div className="mb-6">
-                        <label htmlFor="estado" className="block text-gray-600 text-sm font-medium mb-2">Estado</label>
-                        <select
+                    {isEditMode && (
+                        <Select
+                            label="Estado"
                             id="estado"
                             value={estado}
                             onChange={(e) => setEstado(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white"
+                            options={[
+                                { value: 'activo', label: 'Activo' },
+                                { value: 'inactivo', label: 'Inactivo' },
+                            ]}
                             required
-                        >
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                )
-            }
+                        />
+                    )}
 
-            <div className="flex gap-3">
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex-1 bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                >
-                    {isLoading ? 'Guardando...' : isEditMode ? 'Actualizar' : 'Guardar'}
-                </button>
-                {isEditMode && (
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
-                    >
-                        Cancelar
-                    </button>
-                )}
-                {!isEditMode && (
-                    <button
-                        type="button"
-                        onClick={handleReset}
-                        className="px-6 py-3 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 hover:cursor-pointer transition-colors font-medium"
-                    >
-                        Limpiar
-                    </button>
-                )}
-            </div>
-        </form>
+                    <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={isEditMode ? onCancel : handleReset}
+                            fullWidth
+                            leftIcon={<RefreshCw size={16} />}
+                        >
+                            {isEditMode ? 'Cancelar' : 'Limpiar'}
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={isLoading}
+                            fullWidth
+                            leftIcon={
+                                isLoading ? (
+                                    <Loader2 size={16} className="animate-spin" />
+                                ) : (
+                                    <Save size={16} />
+                                )
+                            }
+                        >
+                            {isLoading
+                                ? 'Guardando...'
+                                : isEditMode
+                                  ? 'Actualizar'
+                                  : 'Guardar proveedor'}
+                        </Button>
+                    </div>
+                </form>
+            </Card>
+
+            <ConfirmModal
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleConfirmUpdate}
+                title="¿Editar proveedor?"
+                description="Vas a modificar los datos de este proveedor. El cambio se registrará inmediatamente."
+                confirmText="Sí, editar"
+                cancelText="Cancelar"
+                loading={isUpdating}
+            />
+        </>
     );
 };
 
