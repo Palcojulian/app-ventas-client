@@ -64,7 +64,7 @@ const Header = ({ onToggleSidebar }: HeaderProps) => {
     }, [menuOpen]);
 
     return (
-        <header className="flex items-center justify-between gap-3 px-3 sm:px-5 py-3 border-b border-gray-200 bg-white/90 backdrop-blur-md sticky top-0 z-20">
+        <header className="flex items-center justify-between gap-3 px-3 sm:px-5 py-3 border-b border-gray-200 bg-white/90 backdrop-blur-md">
             <div className="flex items-center gap-2 min-w-0">
                 <button
                     onClick={onToggleSidebar}

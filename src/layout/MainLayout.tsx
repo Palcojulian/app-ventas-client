@@ -15,7 +15,7 @@ const MainLayout = ({ children }: LayoutProps) => {
     const closeSidebar = () => setSidebarOpen(false);
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="h-screen flex flex-col bg-gray-50">
             <Header onToggleSidebar={toggleSidebar} />
 
             <a
@@ -25,12 +25,12 @@ const MainLayout = ({ children }: LayoutProps) => {
                 Saltar al contenido principal
             </a>
 
-            <div className="flex flex-1 relative">
+            <div className="flex flex-1 relative min-h-0">
                 <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
                 <main
                     id="main-content"
-                    className="flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 w-full min-w-0"
+                    className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 w-full min-w-0"
                     aria-label="Contenido principal"
                 >
                     <div className="mx-auto w-full max-w-7xl">{children}</div>
